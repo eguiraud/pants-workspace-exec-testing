@@ -1,0 +1,15 @@
+shell_command(
+  name="bazel-jvm-binary",
+  command="bazel build --java_runtime_version=remotejdk_11 :ProjectRunner && cp bazel-bin/ProjectRunner.jar {chroot} && ls {chroot}",
+  tools=["bazel", "gcc", "cp", "ls"],
+  extra_env_vars=["HOME", "PATH"],
+  workdir="bazel-jvm",
+  output_files=["../ProjectRunner.jar"],
+  unsafe_execute_in_workspace=True,
+)
+
+run_shell_command(
+  name="run-from-bazel",
+  command="ls -l {chroot}",
+  execution_dependencies=[":bazel-jvm-binary"],
+)
