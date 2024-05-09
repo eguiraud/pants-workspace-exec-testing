@@ -14,3 +14,5 @@ root_patterns = ["/"]
 [anonymous-telemetry]
 enabled = false
 
+[environments-preview.names]
+workspace = "//:workspace"
