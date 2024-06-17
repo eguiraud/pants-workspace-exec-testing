@@ -5,7 +5,11 @@ backend_packages.add = [
   "pants.backend.experimental.adhoc",
 ]
 pants_ignore = [
-  "bazel-jvm/**"
+  "bazel-jvm/bazel-*/**"
+]
+build_ignore = [
+  "bazel-jvm/BUILD*",
+  "bazel-jvm/**/BUILD*",
 ]
 
 [source]

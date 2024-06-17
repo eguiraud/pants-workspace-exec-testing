@@ -6,6 +6,7 @@ shell_command(
   workdir="bazel-jvm",
   output_files=["../ProjectRunner.jar"],
   environment="__local_workspace__",
+  workspace_invalidation_sources=["bazel-jvm/**/*.java"],
 )
 
 run_shell_command(
@@ -14,6 +15,6 @@ run_shell_command(
   execution_dependencies=[":bazel-jvm-binary"],
 )
 
-workspace_environment(
+experimental_workspace_environment(
   name="workspace",
 )
