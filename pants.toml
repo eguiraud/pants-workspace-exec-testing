@@ -3,14 +3,16 @@ pants_version = "2.21.0.dev4"
 backend_packages.add = [
   "pants.backend.shell",
   "pants.backend.experimental.adhoc",
+  "pants.backend.python",
 ]
-pants_ignore = [
-  "bazel-jvm/bazel-*/**"
-]
-build_ignore = [
-  "bazel-jvm/BUILD*",
-  "bazel-jvm/**/BUILD*",
-]
+build_patterns = ["BUILD.pants"]
+
+[tailor]
+build_file_name = "BUILD.pants"
+
+[python]
+# The default interpreter constraints for code in this repo.
+interpreter_constraints = ["==3.10.*"]
 
 [source]
 root_patterns = ["/"]
@@ -19,4 +21,4 @@ root_patterns = ["/"]
 enabled = false
 
 [environments-preview.names]
-workspace = "//:workspace"
+workspace = "//cpp:workspace-cpp"

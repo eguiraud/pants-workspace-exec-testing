@@ -1,0 +1,33 @@
+shell_command(
+  name="bazel-cpp-binary",
+  command="pwd && bazel build --verbose_failures //... && cp -f ../bazel-bin/cpp/hello_cpp .",
+  tools=["bazel", "gcc", "cp", "ls", "as", "bash", "touch", "which", "ld", "g++", "cat", "rm", "mkdir", "env", "ln", "find", "mktemp", "sed"],
+  log_output=True,
+  extra_env_vars=["HOME", "PATH"],
+  output_files=["hello_cpp"],
+  environment="workspace",
+  workspace_invalidation_sources=["hello_cpp.cc"],
+)
+
+# A direct dependency on a shell_command works for `pants test`
+# but is ignored by e.g. `pants check`.
+# This rule tells pants that the output of :vmecpp_via_bazel should be
+# treated as a `resources` target, i.e. it should _always_ be present
+# when a dependent target is used.
+experimental_wrap_as_resources(
+    name="hello_cpp",
+    inputs=[":bazel-cpp-binary"],
+    outputs=["hello_cpp"],
+)
+
+python_source(
+    name="test_reading_bazel_output_from_python",
+    source="test_reading_bazel_output_from_python.py",
+    dependencies=[
+        ":hello_cpp",
+    ],
+)
+
+experimental_workspace_environment(
+  name="workspace-cpp",
+)
