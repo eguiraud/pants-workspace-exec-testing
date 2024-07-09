@@ -1,6 +1,6 @@
 import os
 
-if __name__ == "__main__":
+def test_bazel_output_is_there():
     print("CHECKING IF THE FILE EXISTS")
     print("CWD: ", os.getcwd())
-    os.stat("bazel-cpp/hello_cpp")    
+    os.stat("cpp/hello_cpp")

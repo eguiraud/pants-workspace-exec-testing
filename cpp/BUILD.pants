@@ -1,6 +1,6 @@
 shell_command(
   name="bazel-cpp-binary",
-  command="pwd && bazel build --verbose_failures //... && cp -f ../bazel-bin/cpp/hello_cpp .",
+  command="pwd && bazel build --verbose_failures //... && cp -f ../bazel-bin/cpp/hello_cpp {chroot}/cpp/.",
   tools=["bazel", "gcc", "cp", "ls", "as", "bash", "touch", "which", "ld", "g++", "cat", "rm", "mkdir", "env", "ln", "find", "mktemp", "sed"],
   log_output=True,
   extra_env_vars=["HOME", "PATH"],
@@ -9,22 +9,25 @@ shell_command(
   workspace_invalidation_sources=["hello_cpp.cc"],
 )
 
-# A direct dependency on a shell_command works for `pants test`
-# but is ignored by e.g. `pants check`.
-# This rule tells pants that the output of :vmecpp_via_bazel should be
-# treated as a `resources` target, i.e. it should _always_ be present
-# when a dependent target is used.
+experimental_test_shell_command(
+    name="bazel-cpp-binary-test",
+    tools=["test", "ls"],
+    command="ls -R {chroot} && test -r {chroot}/cpp/hello_cpp",
+    execution_dependencies=[":bazel-cpp-binary"],
+)
+
+# PROBLEM: using :hello_cpp_as_resource as dependency of python_test does NOT bring hello_cpp into the sandbox!
 experimental_wrap_as_resources(
-    name="hello_cpp",
+    name="hello_cpp_as_resource",
     inputs=[":bazel-cpp-binary"],
     outputs=["hello_cpp"],
 )
 
-python_source(
-    name="test_reading_bazel_output_from_python",
-    source="test_reading_bazel_output_from_python.py",
+python_test(
+    name="bazel_output_from_python_test",
+    source="bazel_output_from_python_test.py",
     dependencies=[
-        ":hello_cpp",
+        ":bazel-cpp-binary",
     ],
 )
 
