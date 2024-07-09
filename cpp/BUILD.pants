@@ -1,7 +1,7 @@
 shell_command(
   name="bazel-cpp-binary",
   command="pwd && bazel build --verbose_failures //... && cp -f ../bazel-bin/cpp/hello_cpp {chroot}/cpp/.",
-  path_shims_mode="off",
+  tools=["bazel", "gcc", "cp", "ls", "as", "bash", "touch", "which", "ld", "g++", "cat", "rm", "mkdir", "env", "ln", "find", "mktemp", "sed"],
   log_output=True,
   extra_env_vars=["HOME", "PATH"],
   output_files=["hello_cpp"],
