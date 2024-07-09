@@ -27,7 +27,7 @@ python_test(
     name="bazel_output_from_python_test",
     source="bazel_output_from_python_test.py",
     dependencies=[
-        ":bazel-cpp-binary",
+        ":hello_cpp_as_resource",
     ],
 )
 
